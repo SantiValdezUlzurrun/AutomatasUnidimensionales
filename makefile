@@ -1,6 +1,6 @@
 CFLAGS=-g -O0 -std=c99 -Wall -Wconversion -Wtype-limits -pedantic
 VFLAGS=--leak-check=full  --track-origins=yes --show-reachable=yes
-TARGET=tp
+TARGET=autocel
 
 all: compilar
 	./$(TARGET)
