@@ -35,11 +35,12 @@ unsigned int leer_uint(char* string){
 	return (unsigned int) resultado;
 }
 
+
 void mensaje_ayuda(){
 	
 	// Uso 
 	// ./autocel <R> <N> <inputfile> [-o <outputprefix>]
-	// ./autocel [-hV]
+	// ./autocel [-h|-V]
 	//
 	// Convenciones: https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html
 	printf("$ autocel -h\n");
@@ -58,6 +59,10 @@ void mensaje_ayuda(){
 	printf("  El archivo de salida se llamara evolucion.pbm.\n");
 	printf("  Si no se da un prefijo para los archivos de salida,\n");
 	printf("  el prefijo sera el nombre del archivo de entrada\n");
+}
+
+void mensaje_version(){
+	printf("%s\n", VERSION);
 }
 
 void obtener_configuracion(config_t* config, char* argv[], unsigned int i_salida){
@@ -82,7 +87,8 @@ void obtener_configuracion(config_t* config, char* argv[], unsigned int i_salida
 
 }
 
-void leer_argumentos(int argc, char* argv[], config_t* config){
+
+config_t leer_argumentos(int argc, char* argv[]){
 
 	static struct option opciones_largas[] = {
 		{"help", no_argument, 0, 'h'},
@@ -90,7 +96,7 @@ void leer_argumentos(int argc, char* argv[], config_t* config){
 		{"version", no_argument, 0, 'V'},
 		{0, 0, 0, 0}
 	};
-
+	config_t config = {false, false, false, false, 0, 0, "", ""};
 	int opt;
 	
 	while((opt = getopt_long(argc, argv, "o:Vh", opciones_largas, NULL)) != -1 ) {
@@ -98,47 +104,58 @@ void leer_argumentos(int argc, char* argv[], config_t* config){
 		switch(opt){
 
 			case 'o':
-				if(argc != 6){
-					fprintf(stderr,"Error en los argumentos: Insuficiente información. Consulta las ayudas con ./tp1 -h\n");
-					config->argumentos_equivocados = true;
-					return;
+				if(argc != 6){	
+					config.argumentos_equivocados = true;
+					return config;
 				}
-				obtener_configuracion(config, argv, 5);
-
+				obtener_configuracion(&config, argv, 5);
+				return config;
 			break;		
 
 			case 'h':
-				config->ayuda = true;
+				config.ayuda = true;
+				return config;
 			break;
 
 			case 'V':
-				config->version = true;
-			break;
-
-			default:
-				fprintf(stderr,"Error en los argumentos: Insuficiente información. Consulta las ayudas con ./autocel -h\n");
-			break;
+				config.version = true;	
+				return config;
+			break;	
 		}
 
 	}
 	if (argc == 4){
 
-		obtener_configuracion(config, argv, 3);
+		obtener_configuracion(&config, argv, 3);
+		return config;
 	}
+	config.argumentos_equivocados = true;
+	return config;
 }
 
 int main(int argc, char* argv[]){
 	
-	config_t configuracion = {false, false, false, false, 0, 0, "", ""};
-	leer_argumentos(argc, argv, &configuracion);
-	printf("overflow: %d\nargumentos_equivocados: %d\nayuda: %d\nversion: %d\nregla: %d\nceldas: %d\narchivo_entrada: %s\narchivo_salida: %s\n",
-			configuracion.overflow,
-			configuracion.argumentos_equivocados,
-			configuracion.ayuda,
-			configuracion.version,
-			configuracion.regla,
-			configuracion.celdas,
-			configuracion.archivo_entrada,
-			configuracion.archivo_salida);
+	
+	config_t configuracion = leer_argumentos(argc, argv);	
+	
+	if(configuracion.overflow){
+		return ERROR_LECTURA;
+	}
+
+	if(configuracion.ayuda){
+		mensaje_ayuda();
+	}
+
+	if(configuracion.version){
+		mensaje_version();
+	}
+
+	if(configuracion.argumentos_equivocados){
+		fprintf(stderr,"Error en los argumentos ingresados. Consulta las ayudas con ./tp1 -h\n");
+		return ERROR_LECTURA;
+	}
+
+
+	// Logica	
 	return 0;
 }
