@@ -155,7 +155,16 @@ int main(int argc, char* argv[]){
 		fprintf(stderr,"Error en los argumentos ingresados. Consulta las ayudas con ./tp1 -h\n");
 		return ERROR_LECTURA;
 	}
+	
+	automata_t automata;
+	automata_instanciar(&automata, configuracion.archivo_entrada, configuracion.celdas);
+	if (!automata.tabla) {
+		fprintf(stderr, "Error al reservar memoria.");
+		return -1;
+	}
 
-	instanciar_matriz("ejemplo", 10);
+	automata_guardar(&automata, configuracion.archivo_salida);
+
+	automata_destruir(&automata);
 	return 0;
 }

@@ -4,39 +4,59 @@
 #include "automata.h"
 
 
-void inicializar_matriz(int cantidad_celdas,int matriz[cantidad_celdas][cantidad_celdas]){
-	for (int i = 0; i < cantidad_celdas; i++){
-	    for (int j = 0; j < cantidad_celdas; j++){
-            matriz[i][j]= 0;
-        }    
-    }
-}
+void automata_imprimir(automata_t* automata){
 
-void imprimir_matriz(int cantidad_celdas,int matriz[cantidad_celdas][cantidad_celdas]){
-	for (int i = 0; i < cantidad_celdas; i++){
-		for (int j = 0; j < cantidad_celdas; j++){
-			printf(" %d ", matriz[i][j]);
-		}	
+	unsigned int cant = automata->cantidad_celdas;
+	for (unsigned int i = 0; i < cant; i++){
+		for (unsigned int j = 0; j < cant; j++){
+			printf(" %d ", automata->tabla[i * cant + j]);
+		}
 		printf("\n");
 	}
 }
 
 
-char** instanciar_matriz(char* file, int cantidad_celdas){
+void automata_instanciar(automata_t* automata, char* file, unsigned int celdas){
 
-	int matriz[cantidad_celdas][cantidad_celdas];
-	inicializar_matriz(cantidad_celdas, matriz);
+	automata->cantidad_celdas = celdas;
+	automata->tabla = calloc(automata->cantidad_celdas * automata->cantidad_celdas, sizeof(unsigned char));	
+	if (!automata->tabla)	return;
 
 	FILE* archivo = fopen(file ,"r");
-	if(!archivo) return NULL;
-
-
-	for (int i = 0; i < cantidad_celdas; ++i){
-		fscanf(archivo, "%1d",& matriz[0][i]);
+	if (!archivo) {
+		free(automata->tabla);
+		automata->tabla = NULL;
+		return;
 	}
 
+	for (int i = 0; i < automata->cantidad_celdas; i++){
+		unsigned int p = 0;
+		fscanf(archivo, "%1u", &p);
+		automata->tabla[i] = (unsigned char)p;
+	}
 
 	fclose(archivo);
-	return matriz;
+}
+
+void automata_guardar(automata_t* automata, char* salida){
+
+	strcat(salida, ".pbm");
+	FILE* aGuardar = fopen(salida, "w");
+	fprintf(aGuardar, "P1\n");
+	fprintf(aGuardar, "%u %u\n", automata->cantidad_celdas, automata->cantidad_celdas);
+	
+	unsigned int cant = automata->cantidad_celdas;
+	for (unsigned int i = 0; i < cant; i++){
+		for (unsigned int j = 0; j < cant; j++){
+			
+			fprintf(aGuardar, "%1u ", automata->tabla[i * cant + j]);	
+		}
+		fprintf(aGuardar, "\n");
+	}
+	fclose(aGuardar);
+}
+
+void automata_destruir(automata_t* automata){
+	free(automata->tabla);
 }
 
