@@ -5,6 +5,7 @@
 #include <limits.h>
 #include <errno.h>
 #include <getopt.h>
+#include "automata.h"
 
 #define ERROR_LECTURA -1
 #define ERROR_LEC_INT 1
@@ -154,8 +155,16 @@ int main(int argc, char* argv[]){
 		fprintf(stderr,"Error en los argumentos ingresados. Consulta las ayudas con ./tp1 -h\n");
 		return ERROR_LECTURA;
 	}
+	
+	automata_t automata;
+	automata_instanciar(&automata, configuracion.archivo_entrada, configuracion.celdas);
+	if (!automata.tabla) {
+		fprintf(stderr, "Error al reservar memoria.");
+		return -1;
+	}
 
+	automata_guardar(&automata, configuracion.archivo_salida);
 
-	// Logica	
+	automata_destruir(&automata);
 	return 0;
 }

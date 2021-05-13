@@ -3,7 +3,7 @@ VFLAGS=--leak-check=full  --track-origins=yes --show-reachable=yes
 TARGET=autocel
 
 all:
-	gcc $(CFLAGS) -o $(TARGET) src/main.c
+	gcc $(CFLAGS) -o $(TARGET) src/automata.c src/main.c
 
 test: compilar-test
 	./test
