@@ -5,6 +5,7 @@
 #include <limits.h>
 #include <errno.h>
 #include <getopt.h>
+#include "automata.h"
 
 #define ERROR_LECTURA -1
 #define ERROR_LEC_INT 1
@@ -155,7 +156,6 @@ int main(int argc, char* argv[]){
 		return ERROR_LECTURA;
 	}
 
-
-	// Logica	
+	instanciar_matriz("ejemplo", 10);
 	return 0;
 }
