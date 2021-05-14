@@ -145,10 +145,12 @@ int main(int argc, char* argv[]){
 
 	if(configuracion.ayuda){
 		mensaje_ayuda();
+		return 0;
 	}
 
 	if(configuracion.version){
 		mensaje_version();
+		return 0;
 	}
 
 	if(configuracion.argumentos_equivocados){
@@ -157,11 +159,15 @@ int main(int argc, char* argv[]){
 	}
 	
 	automata_t automata;
-	automata_instanciar(&automata, configuracion.archivo_entrada, configuracion.celdas);
+	automata_instanciar(&automata, configuracion.archivo_entrada, configuracion.celdas, (unsigned char) configuracion.regla);
 	if (!automata.tabla) {
 		fprintf(stderr, "Error al reservar memoria.");
 		return -1;
 	}
+	
+
+	automata_avanzar(&automata);
+	//automata_imprimir(&automata);
 
 	automata_guardar(&automata, configuracion.archivo_salida);
 

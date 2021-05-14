@@ -3,21 +3,57 @@
 #include <stdlib.h>
 #include "automata.h"
 
+#ifndef USE_MIPS
+const unsigned char REGLA_30[8] =  {0, 0, 0, 1, 1, 1, 1, 0};
+const unsigned char REGLA_126[8] = {0, 1, 1, 1, 1, 1, 1, 0};
+const unsigned char REGLA_110[8] = {0, 1, 1, 0, 1, 1, 1, 0};
 
-void automata_imprimir(automata_t* automata){
-
-	unsigned int cant = automata->cantidad_celdas;
-	for (unsigned int i = 0; i < cant; i++){
-		for (unsigned int j = 0; j < cant; j++){
-			printf(" %d ", automata->tabla[i * cant + j]);
-		}
-		printf("\n");
+unsigned char proximo_regla(const unsigned char regla[],
+							unsigned char *a,
+							unsigned int i, unsigned int j,
+							unsigned int N){
+	unsigned char izq = a[i * N + (j - 1) % N];
+	unsigned char der = a[i * N + (j + 1) % N];
+	unsigned char act = a[i * N + j];
+	
+	if (izq == 1 && act == 1 && der == 1){
+		return regla[0];
+	} else if (izq == 1 && act == 1){
+		return regla[1];
+	} else if (izq == 1 && der == 1){
+		return regla[2];
+	} else if (izq == 1){
+		return regla[3];
+	} else if (act == 1 && der == 1){
+		return regla[4];
+	} else if (act == 1){
+		return regla[5];
+	} else if (der == 1){
+		return regla[6];
 	}
+	return regla[7];
 }
 
+unsigned char proximo(unsigned char *a,
+					  unsigned int i, unsigned int j,
+					  unsigned char regla,
+					  unsigned int N){
+	
+	if (regla == 30){
+		return proximo_regla(REGLA_30, a, i, j, N);
+	} else if (regla == 126){
+		return proximo_regla(REGLA_126, a, i, j, N);
+	}
+	return proximo_regla(REGLA_110, a, i, j, N);
+}
+#endif
 
-void automata_instanciar(automata_t* automata, char* file, unsigned int celdas){
-
+void automata_instanciar(automata_t* automata, 
+						 char* file,
+						 unsigned int celdas,
+						 unsigned char regla){
+	
+	automata->regla = regla;
 	automata->cantidad_celdas = celdas;
 	automata->tabla = calloc(automata->cantidad_celdas * automata->cantidad_celdas, sizeof(unsigned char));	
 	if (!automata->tabla)	return;
@@ -37,6 +73,33 @@ void automata_instanciar(automata_t* automata, char* file, unsigned int celdas){
 
 	fclose(archivo);
 }
+
+void automata_avanzar(automata_t* automata){
+	
+	unsigned int cant = automata->cantidad_celdas;
+	for (unsigned int i = 0; i < cant - 1; i++){
+		for (unsigned int j = 0; j < cant; j++){
+	
+			automata->tabla[(i + 1) * cant + j] = proximo(automata->tabla,
+														  i, j,
+														  automata->regla,
+														  cant);
+		}
+	}
+}
+
+void automata_imprimir(automata_t* automata){
+
+	unsigned int cant = automata->cantidad_celdas;
+	for (unsigned int i = 0; i < cant; i++){
+		for (unsigned int j = 0; j < cant; j++){
+			printf(" %d ", automata->tabla[i * cant + j]);
+		}
+		printf("\n");
+	}
+}
+
+
 
 void automata_guardar(automata_t* automata, char* salida){
 
