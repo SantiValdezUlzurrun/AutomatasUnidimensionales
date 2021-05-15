@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "automata.h"
-#define COLOR "\e[107m  \e[0m"
-#define NADA "\e[40m  \e[0m"
+#define COLOR "\033[107m  \033[0m"
+#define NADA "\033[40m  \033[0m"
 #define FPS 10
 #define USPORFRAME 10000 //micro segundos por frame
 

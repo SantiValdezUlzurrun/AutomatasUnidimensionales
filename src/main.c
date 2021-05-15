@@ -136,7 +136,8 @@ config_t leer_argumentos(int argc, char* argv[]){
 
 int main(int argc, char* argv[]){
 	
-	
+	printf("Leyendo estado inicial...\n");	
+
 	config_t configuracion = leer_argumentos(argc, argv);	
 	
 	if(configuracion.overflow){
@@ -165,12 +166,16 @@ int main(int argc, char* argv[]){
 		return -1;
 	}
 	
-
+	printf("Generando automata...\n");
 	automata_avanzar(&automata);
+
+	printf("Imprimiendo...\n");
 	automata_imprimir(&automata);
 
+	printf("Grabando %s.pbm...\n", configuracion.archivo_salida);
 	automata_guardar(&automata, configuracion.archivo_salida);
-
+		
 	automata_destruir(&automata);
+	printf("Listo\n");
 	return 0;
 }
