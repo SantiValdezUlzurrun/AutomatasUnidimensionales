@@ -73,9 +73,12 @@ indice_izq:
 		multu t0, t1				# 
 		mflo t0					# t0 = i * N
 		lw t2, V_LTA_J(fp)			# t2 = j
+		beq t2, zero, calc_izq			# if (j == 0) {calc_izq} else
 		addiu t3, t2, -1			# t3 = j - 1
-		divu t3, t1				#
-		mfhi t3					# t3 = (j - 1) % N
+		b calc_indice_izq
+calc_izq:
+		addiu t3, t1, -1			# t3 = N - 1
+calc_indice_izq:
 		addu a1, t0, t3				# a1 = t0 + t3
 celda_izq:
 		addu a1, a0, a1				# Posicion de memoria de celda izq
