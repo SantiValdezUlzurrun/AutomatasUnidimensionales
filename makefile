@@ -3,8 +3,11 @@ VFLAGS=--leak-check=full  --track-origins=yes --show-reachable=yes
 TARGET=autocel
 
 all:
+ifeq ($(UNAME), mips64)
 	gcc $(CFLAGS) -o $(TARGET) src/automata.c src/main.c
-
+else
+	gcc $(CFLAGS) -DUSE_MIPS -o $(TARGET) src/proximo.S src/automata.c src/main.c
+endif
 test: compilar-test
 	./test
 
