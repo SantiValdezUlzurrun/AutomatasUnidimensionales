@@ -10,6 +10,9 @@
 #define ERROR_LECTURA -1
 #define ERROR_LEC_INT 1
 #define MAXIMO_ARCHIVO 100
+#define REGLA_30 30
+#define REGLA_110 110
+#define REGLA_126 126
 
 const char VERSION[] = "1.0.0";
 
@@ -65,7 +68,9 @@ void mensaje_ayuda(){
 void mensaje_version(){
 	printf("%s\n", VERSION);
 }
-
+bool esReglaValida(unsigned int regla){
+	return (regla == REGLA_30 || regla == REGLA_110 || regla == REGLA_126);
+}
 void obtener_configuracion(config_t* config, char* argv[], unsigned int i_salida){
 
 
@@ -155,10 +160,14 @@ int main(int argc, char* argv[]){
 	}
 
 	if(configuracion.argumentos_equivocados){
-		fprintf(stderr,"Error en los argumentos ingresados. Consulta las ayudas con ./tp1 -h\n");
+		fprintf(stderr,"Error en los argumentos ingresados. Consulta las ayudas con ./autocel -h\n");
 		return ERROR_LECTURA;
 	}
 	
+	if(!esReglaValida(configuracion.regla)){
+		fprintf(stderr,"Regla invalida, solo se permiten 30, 110 y 126. Consulta las ayudas con ./autocel -h\n");
+		return ERROR_LECTURA;	
+	}
 	automata_t automata;
 	automata_instanciar(&automata, configuracion.archivo_entrada, configuracion.celdas, (unsigned char) configuracion.regla);
 	if (!automata.tabla) {

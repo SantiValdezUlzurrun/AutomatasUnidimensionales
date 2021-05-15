@@ -14,14 +14,21 @@ const unsigned char REGLA_30[8] =  {0, 0, 0, 1, 1, 1, 1, 0};
 const unsigned char REGLA_126[8] = {0, 1, 1, 1, 1, 1, 1, 0};
 const unsigned char REGLA_110[8] = {0, 1, 1, 0, 1, 1, 1, 0};
 
+unsigned int indice_izq(unsigned int j, unsigned int N){
+	if (j == 0)
+		return N - 1;
+	return j - 1;
+}
+
 unsigned char proximo_regla(const unsigned char regla[],
 							unsigned char *a,
 							unsigned int i, unsigned int j,
 							unsigned int N){
-	unsigned char izq = a[i * N + (j - 1) % N];
+
+	unsigned char izq = a[i * N + indice_izq(j, N)];
 	unsigned char der = a[i * N + (j + 1) % N];
-	unsigned char act = a[i * N + j];
-	
+	unsigned char act = a[i * N + j];	
+
 	if (izq == 1 && act == 1 && der == 1){
 		return regla[0];
 	} else if (izq == 1 && act == 1){

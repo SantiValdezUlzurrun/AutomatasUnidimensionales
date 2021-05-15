@@ -8,12 +8,9 @@ ifeq ($(shell uname -m), mips64)
 else
 	gcc $(CFLAGS) -o $(TARGET) src/automata.c src/main.c
 endif
-test: compilar-test
-	./test
 
-compilar-test:
-	gcc $(CFLAGS) -o test tests/test.c tests/tester.c
-
+test: all
+	$(shell tests/tests)
 
 .PHONY : clean
 
