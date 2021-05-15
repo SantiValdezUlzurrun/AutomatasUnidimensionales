@@ -74,7 +74,7 @@ indice_izq:
 		mflo t0					# t0 = i * N
 		lw t2, V_LTA_J(fp)			# t2 = j
 		addiu t3, t2, -1			# t3 = j - 1
-		div t3, t1				#
+		divu t3, t1				#
 		mfhi t3					# t3 = (j - 1) % N
 		addu a1, t0, t3				# a1 = t0 + t3
 celda_izq:
@@ -84,7 +84,7 @@ celda_izq:
 
 indice_der:	
 		addiu t3, t2, 1				# t3 = j + 1
-		div t3, t1				#
+		divu t3, t1				#
 		mfhi t3					# t3 = (j + 1) % N
 		addu a2, t0, t3				# a2 = t0 + t3
 celda_der:
