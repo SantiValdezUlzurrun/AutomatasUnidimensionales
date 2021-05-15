@@ -80,7 +80,7 @@ indice_izq:
 celda_izq:
 		addu a1, a0, a1				# Posicion de memoria de celda izq
 		lbu a1, 0(a1)				# Valor de celda izq
-		sw a1, V_LTA_IZQ			# V_LTA_IZQ = a1
+		sw a1, V_LTA_IZQ(fp)			# V_LTA_IZQ = a1
 
 indice_der:	
 		addiu t3, t2, 1				# t3 = j + 1
@@ -90,17 +90,17 @@ indice_der:
 celda_der:
 		addu a2, a0, a2				# Posicion de memoria de celda izq
 		lbu a2, 0(a2)				# Valor de celda izq
-		sw a2, V_LTA_DER			# V_LTA_DER = a2
+		sw a2, V_LTA_DER(fp)			# V_LTA_DER = a2
 
 indice_cen:
 		addu a3, t0, t2				# a3 = i * N + j
 celda_cen:
 		addu a3, a0, a3				# Posicion de memoria de celda izq
 		lbu a3, 0(a3)				# Valor de celda izq
-		sw a3, V_LTA_DER			# V_LTA_CEN = a3
+		sw a3, V_LTA_DER(fp)			# V_LTA_CEN = a3
 
 usar_regla_n:
-		lw t4, V_LTA_R				# t4 = R
+		lw t4, V_LTA_R(fp)			# t4 = R
 		addiu t5, zero, REGLA_30		# t5 = REGLA_30  
 		beq t4, t5, regla_30			# if (t4 == t5) { aplicar regla 30 } else 
 		addiu t5, zero, REGLA_126		# t5 = REGLA_126
