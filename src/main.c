@@ -167,7 +167,7 @@ int main(int argc, char* argv[]){
 	
 
 	automata_avanzar(&automata);
-	//automata_imprimir(&automata);
+	automata_imprimir(&automata);
 
 	automata_guardar(&automata, configuracion.archivo_salida);
 

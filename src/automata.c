@@ -1,7 +1,13 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "automata.h"
+#define COLOR "\e[107m  \e[0m"
+#define NADA "\e[40m  \e[0m"
+#define FPS 10
+#define USPORFRAME 10000 //micro segundos por frame
+
 
 #ifndef USE_MIPS
 const unsigned char REGLA_30[8] =  {0, 0, 0, 1, 1, 1, 1, 0};
@@ -89,13 +95,13 @@ void automata_avanzar(automata_t* automata){
 }
 
 void automata_imprimir(automata_t* automata){
-
 	unsigned int cant = automata->cantidad_celdas;
 	for (unsigned int i = 0; i < cant; i++){
 		for (unsigned int j = 0; j < cant; j++){
-			printf(" %d ", automata->tabla[i * cant + j]);
-		}
+			printf("%s", (automata->tabla[i * cant + j] == 0)? NADA : COLOR);	
+		}	
 		printf("\n");
+		usleep(FPS * USPORFRAME);
 	}
 }
 
