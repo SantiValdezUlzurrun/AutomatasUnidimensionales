@@ -1,2 +1,2 @@
 #!/bin/bash
-sh test01
+sh tests/test01

@@ -10,11 +10,9 @@ else
 endif
 
 test: all
-	$(shell tests/tests)
+	sh tests/tests
 
 .PHONY : clean
 
 clean:
 	rm $(TARGET)
-	rm test
-	rm *.o
