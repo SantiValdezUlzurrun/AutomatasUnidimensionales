@@ -1,0 +1,17 @@
+#!/bin/bash
+#Tipo de prueba
+tst="test03"
+regla="126"
+arc="unoAlPrincipio"
+
+#Ejecucion
+arcent="tests/archivos/$arc"
+arcsal="tests/archivos/${arc}prueba${regla}"
+arcver="tests/archivos/${arc}ver${regla}.pbm"
+ok="\e[32;1m ✓ $tst \e[0m: El archivo ${arc}.pbm de la regla ${regla} son iguales"
+err="\e[31;1m ✗ $tst\e[0m: El archivo ${arc}.pbm de la regla ${regla} son distintos"
+
+./autocel $regla 80 $arcent -o $arcsal 2> /dev/null > /dev/null
+
+#Assert
+(diff "${arcsal}.pbm" $arcver && echo $ok) || echo $err

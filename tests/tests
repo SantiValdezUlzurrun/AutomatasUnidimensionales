@@ -1,2 +1,10 @@
 #!/bin/bash
 sh tests/test01
+sh tests/test02
+sh tests/test03
+sh tests/test04
+sh tests/test05
+sh tests/test06
+sh tests/test07
+sh tests/test08
+sh tests/test09
